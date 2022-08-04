@@ -23,6 +23,7 @@ public class panel extends JPanel implements MouseListener{
 	JPanel panel;
 	JButton start;
 	JButton stop;
+	JCheckBox reqSquares;
 	int player1 = 0;
 	int player2 = 0;
 	boolean player1Turn = true;
@@ -64,7 +65,11 @@ public class panel extends JPanel implements MouseListener{
 	   
 	   panel.add(start, BorderLayout.SOUTH);
 	   panel.add(stop, BorderLayout.NORTH);
-     
+	   
+	   reqSquares = new JCheckBox("Required lines");
+	   reqSquares.setBounds(100, 100, 50, 50);
+	   panel.add(reqSquares);
+	   
 	   window.setContentPane(this);		
 	   window.add(panel);
 	   window.setVisible(true);
@@ -86,8 +91,8 @@ public class panel extends JPanel implements MouseListener{
 	   int length = (int) (this.getWidth()*.75);
 	   int height = (int) (this.getHeight()*.75);
 	   g.setColor(Color.black);
-	   
-	   checkValidSquares();
+	   if (reqSquares.isSelected())
+		   checkValidSquares();
 	   for (int i = 0; i < board.length; i++) {
 		   for (int j = 0; j < board[0].length; j++) {
 			   if (started) {
@@ -117,6 +122,15 @@ public class panel extends JPanel implements MouseListener{
 		   }
 	   }
 	   
+	   for (int i = 0; i < posLoc.size(); i++) {
+		   String[] split = posLoc.get(i).split("\\,");
+		   int x = Integer.parseInt(split[0]);
+		   int y = Integer.parseInt(split[1]);
+		   g.setColor(Color.CYAN);
+		   g.drawRect(length/9*(x+1)+50, height/9*(y+1)+50, length/9, height/9);
+	   }
+	   
+	   g.setColor(Color.BLACK);
 	   g.drawString("Player 1: " + player1, 50, 25);
 	   g.drawString("Player 2: " + player2, 50, 75);
 	   g.drawString(status, 300, 100);
@@ -127,19 +141,20 @@ public class panel extends JPanel implements MouseListener{
    
    public boolean awardPoints(int i, int j) {
 	   int count = 0;
+	   boolean toReturn = false;
 	   boolean includes = false;
 	   for (int k = 0; k < board.length; k++) {
 		   if (board[i][k] == 1)
 			   count++;
 		   if (k == j)
 			   includes = true;
-		   if (board[i][k] == 0) {
+		   if (board[i][k] == 0 || k == board.length-1) {
 			   if (includes && (count == 3 || count == 6)) {
 				   if (player1Turn)
 					   player1 += count;
 				   else
 					   player2 += count;
-				   return true;
+				   toReturn = true;
 			   }
 				   
 			   count = 0;
@@ -152,20 +167,20 @@ public class panel extends JPanel implements MouseListener{
 			   player1 += count;
 		   else
 			   player2 += count;
-		   return true;
+		   toReturn = true;
 	   }
 	   for (int k = 0; k < board[0].length; k++) {
 		   if (board[k][j] == 1)
 			   count++;
 		   if (k == i)
 			   includes = true;
-		   if (board[k][j] == 0) {
+		   if (board[k][j] == 0 || k == board[0].length-1) {
 			   if (includes && (count == 3 || count == 6)) {
 				   if (player1Turn)
 					   player1 += count;
 				   else
 					   player2 += count;
-				   return true;
+				   toReturn = true;
 			   }
 				   
 			   count = 0;
@@ -178,9 +193,9 @@ public class panel extends JPanel implements MouseListener{
 			   player1 += count;
 		   else
 			   player2 += count;
-		   return true;
+		   toReturn = true;
 	   }
-	   return false;
+	   return toReturn;
    }
    
    public void checkValidSquares() {
@@ -199,11 +214,18 @@ public class panel extends JPanel implements MouseListener{
 	   for (int k = 0; k < board.length; k++) {
 		   if (board[i][k] == 1)
 			   count++;
-		   else if (k == j) {
+		   if (k == j) {
 			   includes = true;
 			   count++;
 		   }
-		   else if (board[i][k] == 0) {
+		   else if (board[i][k] == 0 ) {
+			   if (includes && (count == 3 || count == 6)) 
+				   return true;
+			   count = 0;
+			   includes = false;
+		   }
+		   if (k == board.length-1)
+		   {
 			   if (includes && (count == 3 || count == 6)) 
 				   return true;
 			   count = 0;
@@ -217,15 +239,20 @@ public class panel extends JPanel implements MouseListener{
 	   for (int k = 0; k < board[0].length; k++) {
 		   if (board[k][j] == 1)
 			   count++;
-		   else if (k == i) {
+		   if (k == i) {
 			   includes = true;
 			   count++;
 		   }
-		   else if (board[k][j] == 0) {
+		   else if (board[k][j] == 0 || k == board[0].length-1) {
 			   if (includes && (count == 3 || count == 6)) 
 				   return true;
-			   
-				   
+			   count = 0;
+			   includes = false;
+		   }
+		   if (k == board[0].length-1)
+		   {
+			   if (includes && (count == 3 || count == 6)) 
+				   return true;
 			   count = 0;
 			   includes = false;
 		   }
@@ -265,7 +292,9 @@ public class panel extends JPanel implements MouseListener{
     	  started = true;
     	  mouseLocX = 0;
     	  mouseLocY = 0;
+    	  reqSquares.setEnabled(false);
     	  repaint();
+    	  
    
       }
    }
@@ -280,6 +309,7 @@ public class panel extends JPanel implements MouseListener{
 	    	  board = new int[9][9];
 	    	  started = false;
 	    	  posLoc = new ArrayList<String>();
+	    	  reqSquares.setEnabled(true);
 	    	  repaint();
 	         
 	   
@@ -294,7 +324,3 @@ public class panel extends JPanel implements MouseListener{
   
 }
  
-
-
-
-
