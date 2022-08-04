@@ -139,6 +139,7 @@ public class panel extends JPanel implements MouseListener{
 			   status = "Game over: Player 2 wins";
 		   
 	   }
+	   else {}
 	   
 	   g.setColor(Color.BLACK);
 	   g.drawString("Player 1: " + player1, 50, 25);
