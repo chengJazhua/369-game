@@ -87,7 +87,7 @@ public class panel extends JPanel implements MouseListener{
    
    
    public void showBoard(Graphics g){
-	   
+	   int count = 0;
 	   int length = (int) (this.getWidth()*.75);
 	   int height = (int) (this.getHeight()*.75);
 	   g.setColor(Color.black);
@@ -99,6 +99,7 @@ public class panel extends JPanel implements MouseListener{
 				   if (mouseLocX > length/9*(i+1)+50 && mouseLocX < length/9*(i+2)+50
 				   		&& mouseLocY > height/9*(j+1)+50 && mouseLocY < height/9*(j+2)+50) {
 				   	if (board[i][j] == 0) {
+				   		
 				   		if (posLoc.isEmpty() || posLoc.contains(i+","+j)) {
 				   			board[i][j] = 1;
 				   			if (!awardPoints(i, j))
@@ -117,6 +118,7 @@ public class panel extends JPanel implements MouseListener{
 			   if (board[i][j] == 1) {
 				   g.drawLine(length/9*(i+1)+50, height/9*(j+1)+50, length/9*(i+2)+50, height/9*(j+2)+50);
 				   g.drawLine(length/9*(i+2)+50, height/9*(j+1)+50, length/9*(i+1)+50, height/9*(j+2)+50);
+				   count++;
 			   }
 			   
 		   }
@@ -128,6 +130,14 @@ public class panel extends JPanel implements MouseListener{
 		   int y = Integer.parseInt(split[1]);
 		   g.setColor(Color.CYAN);
 		   g.drawRect(length/9*(x+1)+50, height/9*(y+1)+50, length/9, height/9);
+	   }
+	   
+	   if (count == 81) {
+		   if (player1 > player2)
+			   status = "Game over: Player 1 wins";
+		   else
+			   status = "Game over: Player 2 wins";
+		   
 	   }
 	   
 	   g.setColor(Color.BLACK);
@@ -149,7 +159,7 @@ public class panel extends JPanel implements MouseListener{
 		   if (k == j)
 			   includes = true;
 		   if (board[i][k] == 0 || k == board.length-1) {
-			   if (includes && (count == 3 || count == 6)) {
+			   if (includes && (count == 3 || count == 6 || count == 9)) {
 				   if (player1Turn)
 					   player1 += count;
 				   else
@@ -162,20 +172,14 @@ public class panel extends JPanel implements MouseListener{
 		   }
 			   
 	   }
-	   if (count == 9) {
-		   if (player1Turn)
-			   player1 += count;
-		   else
-			   player2 += count;
-		   toReturn = true;
-	   }
+	   
 	   for (int k = 0; k < board[0].length; k++) {
 		   if (board[k][j] == 1)
 			   count++;
 		   if (k == i)
 			   includes = true;
 		   if (board[k][j] == 0 || k == board[0].length-1) {
-			   if (includes && (count == 3 || count == 6)) {
+			   if (includes && (count == 3 || count == 6 || count == 9)) {
 				   if (player1Turn)
 					   player1 += count;
 				   else
@@ -188,13 +192,7 @@ public class panel extends JPanel implements MouseListener{
 		   }
 			   
 	   }
-	   if (count == 9) {
-		   if (player1Turn)
-			   player1 += count;
-		   else
-			   player2 += count;
-		   toReturn = true;
-	   }
+	   
 	   return toReturn;
    }
    
@@ -219,22 +217,21 @@ public class panel extends JPanel implements MouseListener{
 			   count++;
 		   }
 		   else if (board[i][k] == 0 ) {
-			   if (includes && (count == 3 || count == 6)) 
+			   if (includes && (count == 3 || count == 6 || count == 9)) 
 				   return true;
 			   count = 0;
 			   includes = false;
 		   }
 		   if (k == board.length-1)
 		   {
-			   if (includes && (count == 3 || count == 6)) 
+			   if (includes && (count == 3 || count == 6 || count == 9)) 
 				   return true;
 			   count = 0;
 			   includes = false;
 		   }
 			   
 	   }
-	   if (count == 9) 
-		   return true;
+	   
 	   
 	   for (int k = 0; k < board[0].length; k++) {
 		   if (board[k][j] == 1)
@@ -244,23 +241,21 @@ public class panel extends JPanel implements MouseListener{
 			   count++;
 		   }
 		   else if (board[k][j] == 0 || k == board[0].length-1) {
-			   if (includes && (count == 3 || count == 6)) 
+			   if (includes && (count == 3 || count == 6 || count == 9)) 
 				   return true;
 			   count = 0;
 			   includes = false;
 		   }
 		   if (k == board[0].length-1)
 		   {
-			   if (includes && (count == 3 || count == 6)) 
+			   if (includes && (count == 3 || count == 6 || count == 9)) 
 				   return true;
 			   count = 0;
 			   includes = false;
 		   }
 			   
 	   }
-	   if (count == 9) {
-		   return true;
-	   }
+	   
 	   return false;
 	   
    }
