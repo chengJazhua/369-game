@@ -5,6 +5,8 @@ import java.util.*;
 import java.awt.event.*;
 import javax.swing.*;
 import java.awt.image.*;
+import java.io.File;
+
 import javax.swing.border.*;
 
 import java.awt.event.KeyListener;
@@ -118,8 +120,11 @@ public class panel extends JPanel implements MouseListener{
 			   g.drawRect(length/9*(i+1)+50, height/9*(j+1)+50, length/9, height/9);
 			   g.setColor(Color.BLACK);
 			   if (board[i][j] == 1) {
-				   g.drawLine(length/9*(i+1)+50, height/9*(j+1)+50, length/9*(i+2)+50, height/9*(j+2)+50);
-				   g.drawLine(length/9*(i+2)+50, height/9*(j+1)+50, length/9*(i+1)+50, height/9*(j+2)+50);
+				   ImageIcon x = new ImageIcon(this.getClass()
+			                .getResource("x image.png"));
+				   Image image = x.getImage();
+				   g.drawImage(image, length/9*(i+1)+50, height/9*(j+1)+50, length/9, height/9, null);
+				   
 				   count++;
 			   }
 			   
