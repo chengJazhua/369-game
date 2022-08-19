@@ -136,8 +136,11 @@ public class panel extends JPanel implements MouseListener{
 	   if (count == 81) {
 		   if (player1 > player2)
 			   status = "Game over: Player 1 wins";
-		   else
+		   else if (player2 > player1)
 			   status = "Game over: Player 2 wins";
+		   else
+			   status = "Both players tied";
+		   stop.doClick();
 		   
 	   }
 	  
@@ -237,7 +240,8 @@ public class panel extends JPanel implements MouseListener{
 	   }
 	   if (count == 9) 
 		   return true;
-	   
+	   count = 0;
+	   includes = false;
 	   for (int k = 0; k < board[0].length; k++) {
 		   if (board[k][j] == 1)
 			   count++;
@@ -252,7 +256,7 @@ public class panel extends JPanel implements MouseListener{
 				   count = 0;
 				   includes = false;
 			   }
-			   if (k == board.length-1) {
+			   if (k == board[0].length-1) {
 				   if (includes && (count == 3 || count == 6 )) 
 					   return true;
 			   
@@ -295,6 +299,7 @@ public class panel extends JPanel implements MouseListener{
     	  mouseLocX = 0;
     	  mouseLocY = 0;
     	  reqSquares.setEnabled(false);
+    	  status = "";
     	  repaint();
    
       }
