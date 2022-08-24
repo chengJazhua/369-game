@@ -25,6 +25,7 @@ public class panel extends JPanel implements MouseListener{
 	JPanel panel;
 	JButton start;
 	JButton stop;
+	JButton rules;
 	int player1 = 0;
 	int player2 = 0;
 	boolean player1Turn = true;
@@ -36,12 +37,13 @@ public class panel extends JPanel implements MouseListener{
 	
 	int[][] board = new int[9][9];
 	ArrayList<String> posLoc = new ArrayList<String>();
+	JFrame window = new JFrame();
 	
    
    
    public panel() {
 	   
-	   JFrame window = new JFrame();
+	   
 	   window.setSize(800,800);  
 	   window.setLocation(1, 1);				         
 	   window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -65,12 +67,18 @@ public class panel extends JPanel implements MouseListener{
 	   stop.setVisible(true);
 	   stop.setEnabled(false);
 	   
-	   panel.add(start, BorderLayout.SOUTH);
-	   panel.add(stop, BorderLayout.NORTH);
+	   rules = new JButton("Rules");
+	   rules.addActionListener(new Listener_Rules());
+	   rules.setVisible(true);
+	   
+	   
+	   panel.add(rules, BorderLayout.WEST);
+	   panel.add(start, BorderLayout.NORTH);
+	   panel.add(stop, BorderLayout.EAST);
 	   
 	   reqSquares = new JCheckBox("Required lines");
 	   reqSquares.setBounds(100, 100, 50, 50);
-	   panel.add(reqSquares);
+	   panel.add(reqSquares, BorderLayout.SOUTH);
      
 	   window.setContentPane(this);		
 	   window.add(panel);
@@ -322,6 +330,20 @@ public class panel extends JPanel implements MouseListener{
 	    	  posLoc = new ArrayList<String>();
 	    	  reqSquares.setEnabled(true);
 	    	  repaint();
+	         
+	   
+	      }
+	   }
+   
+   private class Listener_Rules implements ActionListener{
+	      public void actionPerformed( ActionEvent evt){
+	      
+	    	  JOptionPane.showMessageDialog(window, "Rules: Each turn, one player places down a x. \n"
+	    	  		+ "If the x creates a row of 3, 6, or 9, they get points "
+	    	  		+ "corresponding to the length of the row, and get to place "
+	    	  		+ "another x.\n"
+	    	  		+ "If the required box is checked, a player must place "
+	    	  		+ "down a X to create a row of 3, 6, or 9 when possible. ");
 	         
 	   
 	      }
